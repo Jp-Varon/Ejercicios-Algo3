@@ -21,124 +21,129 @@ TestCase subclass: #CustomerBookTest
 	poolDictionaries: ''
 	category: 'CodigoRepetido-Ejercicio'!
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'juan 5/15/2021 15:09:41'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'AJ 5/15/2021 16:03:18'!
 test01AddingCustomerShouldNotTakeMoreThan50Milliseconds
 
-	| customerBook Name|
+	| customerBook name|
 	
 	customerBook := CustomerBook new.
-	Name := 'John Lennon'.
-	self CodigoQueSeRealiza: [customerBook addCustomerNamed: Name] 
-	MenosQue: 50.
+	name := 'John Lennon'.
+	
+	self codigoQueSeRealiza: [customerBook addCustomerNamed: name]   menosTiempoQue: 50.
+
 	
 	
 	
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'juan 5/15/2021 15:10:19'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'AJ 5/15/2021 16:11:07'!
 test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 
-	| customerBook Name |
+	| customerBook name |
 	
-	customerBook := CustomerBook new.
-	Name := 'Paul McCartney'.
+	name := 'Paul McCartney'.
+	customerBook := self creacionLibroConNombre:  name.
 	
-	customerBook addCustomerNamed: Name.
-	  
-	self CodigoQueSeRealiza: [customerBook removeCustomerNamed: Name] 
-	MenosQue: 100.
+	self codigoQueSeRealiza: [customerBook removeCustomerNamed: name] 
+		menosTiempoQue: 100.
+	
 	
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'juan 5/15/2021 15:17:50'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'AJ 5/15/2021 16:11:57'!
 test03CanNotAddACustomerWithEmptyName 
 
 	| customerBook |
 			
 	customerBook := CustomerBook new.
 	 
+	self seRealiza:[ customerBook addCustomerNamed: ''. ]  
+		causa: Error  
+		condiciones: 	[ :anError | 
+				self assert: anError messageText = CustomerBook customerCanNotBeEmptyErrorMessage.
+				self assert: customerBook isEmpty ]! !
 
-	self seRealiza:[ customerBook addCustomerNamed: ''. ]  causa: Error  condiciones: [ :anError | 
-			self assert: anError messageText = CustomerBook customerCanNotBeEmptyErrorMessage.
-			self assert: customerBook isEmpty ]! !
-
-!CustomerBookTest methodsFor: 'tests' stamp: 'juan 5/15/2021 15:19:46'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'AJ 5/15/2021 16:05:56'!
 test04CanNotRemoveAnInvalidCustomer
 	
-	| customerBook Name |
+	| customerBook name |
 			
-	customerBook := CustomerBook new.
-	Name := 'John Lennon'.
-	customerBook addCustomerNamed: Name.
+	name := 'John Lennon'.
+	customerBook := self creacionLibroConNombre: name.
+	
 	self seRealiza:[ customerBook removeCustomerNamed: 'Paul McCartney'.
-	self fail ]  causa: NotFound condiciones: [ :anError | 
+	self fail ]  
+		causa: NotFound 
+		condiciones: [ :anError | 
 			self assert: customerBook numberOfCustomers = 1.
-			self assert: (customerBook includesCustomerNamed: Name) ]
+			self assert: (customerBook includesCustomerNamed: name) ]
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'juan 5/15/2021 15:28:24'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'AJ 5/15/2021 16:20:00'!
 test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 
 	| customerBook paulMcCartney|
 	
-	
 	paulMcCartney := 'Paul McCartney'.
-	customerBook := self CreacionLibro: paulMcCartney.
+	customerBook := self creacionLibroConNombreYSuspender: paulMcCartney.
 	
-	
-	self Validaciones: customerBook segundo: 0 tercero: 1 cuarto: 1. 
+	self unLibroAValidar: customerBook primerValor: 0 segundoValor: 1  tercerValor:  1.
 	self assert: (customerBook includesCustomerNamed: paulMcCartney).
 	
 
 	
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'juan 5/15/2021 15:29:56'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'AJ 5/15/2021 16:20:24'!
 test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 
 	| customerBook paulMcCartney|
 	
 	paulMcCartney := 'Paul McCartney'.
-	customerBook := self CreacionLibro: paulMcCartney.
-	customerBook removeCustomerNamed: paulMcCartney.
+	customerBook := self creacionLibroConNombreYSuspender: paulMcCartney.
 	
-	self Validaciones: customerBook segundo: 0 tercero:0  cuarto: 0.
+	customerBook removeCustomerNamed: paulMcCartney.
+
+	self unLibroAValidar: customerBook primerValor: 0 segundoValor: 0  tercerValor:  0.
 	self deny: (customerBook includesCustomerNamed: paulMcCartney).
 
 
 	
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'juan 5/15/2021 15:40:34'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'AJ 5/15/2021 16:07:12'!
 test07CanNotSuspendAnInvalidCustomer
 	
 	| customerBook johnLennon ringoStarr|
 			
-	customerBook := CustomerBook new.
+	
 	johnLennon := 'John Lennon'.
 	ringoStarr := 'Ringo Starr'.
-	customerBook addCustomerNamed: johnLennon.
-	self verificoQue: ringoStarr noPuedeSerSuspendidaEn: customerBook 
-	yDeberiaIncuirA: johnLennon.
+	customerBook := self creacionLibroConNombre: johnLennon.
+	
+	self verificoQue: ringoStarr 
+		noPuedeSerSuspendidaEn: customerBook 
+		yDeberiaIncuirA: johnLennon.
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'juan 5/15/2021 15:41:04'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'AJ 5/15/2021 16:08:00'!
 test08CanNotSuspendAnAlreadySuspendedCustomer
 	
 	| customerBook johnLennon |
 			
-	customerBook := CustomerBook new.
 	johnLennon := 'John Lennon'.
-	customerBook addCustomerNamed: johnLennon.
-	customerBook suspendCustomerNamed: johnLennon.
-	self verificoQue: johnLennon noPuedeSerSuspendidaEn: customerBook 
-	yDeberiaIncuirA: johnLennon.
+	customerBook:= self creacionLibroConNombreYSuspender: johnLennon.
+	
+	self verificoQue: johnLennon 
+		noPuedeSerSuspendidaEn: customerBook 
+		yDeberiaIncuirA: johnLennon.
 ! !
 
 
-!CustomerBookTest methodsFor: 'as yet unclassified' stamp: 'juan 5/15/2021 15:07:11'!
-CodigoQueSeRealiza:bloqueDeCodigo MenosQue: tiempo
-|millisecondsBeforeRunning millisecondsAfterRunning|
+!CustomerBookTest methodsFor: 'ayudantes' stamp: 'AJ 5/15/2021 16:00:36'!
+codigoQueSeRealiza:bloqueDeCodigo menosTiempoQue: tiempo
+
+	|millisecondsBeforeRunning millisecondsAfterRunning|
         millisecondsBeforeRunning := Time millisecondClockValue * millisecond.
 	bloqueDeCodigo value.
 	millisecondsAfterRunning := Time millisecondClockValue * millisecond.
@@ -146,27 +151,27 @@ CodigoQueSeRealiza:bloqueDeCodigo MenosQue: tiempo
 	self assert: (millisecondsAfterRunning-millisecondsBeforeRunning) < (tiempo * millisecond)
 ! !
 
-!CustomerBookTest methodsFor: 'as yet unclassified' stamp: 'juan 5/15/2021 15:28:05'!
-CreacionLibro: nombre
+!CustomerBookTest methodsFor: 'ayudantes' stamp: 'AJ 5/15/2021 16:02:16'!
+creacionLibroConNombre: nombre
 
 	| customerBook |
-	
 	customerBook := CustomerBook new.
-	
 	customerBook addCustomerNamed: nombre.
+	^customerBook.
+
+! !
+
+!CustomerBookTest methodsFor: 'ayudantes' stamp: 'AJ 5/15/2021 16:08:43'!
+creacionLibroConNombreYSuspender: nombre
+
+	| customerBook |
+	customerBook := self creacionLibroConNombre: nombre.
 	customerBook suspendCustomerNamed: nombre.
 	^customerBook.
 
 ! !
 
-!CustomerBookTest methodsFor: 'as yet unclassified' stamp: 'juan 5/15/2021 15:22:30'!
-Validaciones:primero segundo:segundo tercero:tercero cuarto:cuarto
-	self assert: segundo equals: primero numberOfActiveCustomers.
-	self assert: tercero equals: primero numberOfSuspendedCustomers.
-	self assert: cuarto equals: primero numberOfCustomers.
-! !
-
-!CustomerBookTest methodsFor: 'as yet unclassified' stamp: 'juan 5/15/2021 15:18:04'!
+!CustomerBookTest methodsFor: 'ayudantes' stamp: 'juan 5/15/2021 15:18:04'!
 seRealiza: codigoDelError causa: identificadorDeError condiciones: codigoCondicion
 
 [ codigoDelError value.
@@ -175,9 +180,20 @@ seRealiza: codigoDelError causa: identificadorDeError condiciones: codigoCondici
 		do: codigoCondicion 
 ! !
 
-!CustomerBookTest methodsFor: 'as yet unclassified' stamp: 'juan 5/15/2021 15:38:24'!
+!CustomerBookTest methodsFor: 'ayudantes' stamp: 'AJ 5/15/2021 16:19:18'!
+unLibroAValidar:unLibro primerValor: primero segundoValor:segundo tercerValor: tercero
+
+	self assert: primero equals: unLibro numberOfActiveCustomers.
+	self assert: segundo equals: unLibro numberOfSuspendedCustomers.
+	self assert: tercero equals: unLibro numberOfCustomers.
+! !
+
+!CustomerBookTest methodsFor: 'ayudantes' stamp: 'AJ 5/15/2021 15:59:52'!
 verificoQue: unaPersona noPuedeSerSuspendidaEn: unCustomerBook yDeberiaIncuirA: unaPersonaIncluida
-    self seRealiza:[ unCustomerBook suspendCustomerNamed: unaPersona. ]  causa: CantSuspend condiciones:  [ :anError | 
+
+    self seRealiza:[ unCustomerBook suspendCustomerNamed: unaPersona. ] 
+		 causa: CantSuspend 
+		 condiciones:  [ :anError | 
 			self assert: unCustomerBook numberOfCustomers = 1.
 			self assert: (unCustomerBook includesCustomerNamed: unaPersonaIncluida ) ]! !
 
