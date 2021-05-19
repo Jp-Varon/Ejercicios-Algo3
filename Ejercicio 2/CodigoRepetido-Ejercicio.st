@@ -79,7 +79,7 @@ test04CanNotRemoveAnInvalidCustomer
 			self assert: (customerBook includesCustomerNamed: name) ]
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'AJ 5/17/2021 21:16:16'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'AJ 5/17/2021 20:51:39'!
 test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 
 	| customerBook paulMcCartney|
@@ -87,17 +87,14 @@ test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 	paulMcCartney := 'Paul McCartney'.
 	customerBook := self createBookWithCustomerAndSuspend: paulMcCartney.
 	
-	self checkThatBook: customerBook 
-		shouldHaveThisManyActiveCustomers: 0 
-		andSuspendedCustomers: 1  
-		andTotalCustomers:  1.
+	self checkThatBook: customerBook shouldHaveThisManyActiveCustomers: 0 andSuspendedCustomers: 1  andTotalCustomers:  1.
 	self assert: (customerBook includesCustomerNamed: paulMcCartney).
 	
 
 	
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'AJ 5/17/2021 21:18:24'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'AJ 5/17/2021 20:51:39'!
 test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 
 	| customerBook paulMcCartney|
@@ -107,10 +104,7 @@ test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 	
 	customerBook removeCustomerNamed: paulMcCartney.
 
-	self checkThatBook: customerBook 
-		shouldHaveThisManyActiveCustomers: 0 
-		andSuspendedCustomers: 0  
-		andTotalCustomers:  0.
+	self checkThatBook: customerBook shouldHaveThisManyActiveCustomers: 0 andSuspendedCustomers: 0  andTotalCustomers:  0.
 	self deny: (customerBook includesCustomerNamed: paulMcCartney).
 
 
@@ -271,15 +265,14 @@ isEmpty
 	"^active isEmpty and: [ suspended isEmpty ]"! !
 
 
-!CustomerBook methodsFor: 'signal errors' stamp: 'HernanWilkinson 7/6/2011 17:52'!
+!CustomerBook methodsFor: 'signal errors' stamp: 'juan 5/19/2021 17:25:38'!
 signalCustomerAlreadyExists 
-
 	self error: self class customerAlreadyExistsErrorMessage! !
 
-!CustomerBook methodsFor: 'signal errors' stamp: 'HernanWilkinson 7/6/2011 17:51'!
+!CustomerBook methodsFor: 'signal errors' stamp: 'juan 5/19/2021 17:25:48'!
 signalCustomerNameCannotBeEmpty 
-
-	self error: self class customerCanNotBeEmptyErrorMessage ! !
+	self error: self class customerCanNotBeEmptyErrorMessage.
+	! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
